@@ -18,6 +18,7 @@ const PassportForm = () => {
     },
   ]);
   const [status, setStatus] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false); // ✅ new state
 
   const handleChange = (index, e) => {
     const { name, value } = e.target;
@@ -100,6 +101,7 @@ const PassportForm = () => {
       if (!emailRes.ok) throw new Error('Failed to send email');
 
       setStatus('✅ Data saved and email sent successfully!');
+      setShowSuccess(true); // ✅ show overlay
       setPersons([
         {
           full_name: '',
@@ -144,28 +146,28 @@ const PassportForm = () => {
                 )}
               </div>
 
-              <div className={styles.inputGroup}>
-                <label htmlFor={`full_name_${index}`}>Full Name</label>
-                <input
-                  id={`full_name_${index}`}
-                  name="full_name"
-                  placeholder="Enter full name"
-                  value={person.full_name}
-                  onChange={(e) => handleChange(index, e)}
-                  required
-                />
-              </div>
-              <div className={styles.inputGroup}>
-                <label htmlFor={`passport_number_${index}`}>Passport Number</label>
-                <input
-                  id={`passport_number_${index}`}
-                  name="passport_number"
-                  placeholder="Enter passport number"
-                  value={person.passport_number}
-                  onChange={(e) => handleChange(index, e)}
-                  required
-                />
-              </div>
+              {/* Form Fields */}
+              {[
+                { label: 'Full Name', name: 'full_name', placeholder: 'Enter full name' },
+                { label: 'Passport Number / ID Number', name: 'passport_number', placeholder: 'Enter passport or ID number' },
+                { label: 'Email (optional)', name: 'email', placeholder: 'Enter email', type: 'email' },
+                { label: 'Address (optional)', name: 'address', placeholder: 'Enter address' },
+                { label: 'Phone Number (optional)', name: 'phone_number', placeholder: 'Enter phone number' },
+              ].map(({ label, name, placeholder, type = 'text' }) => (
+                <div key={name} className={styles.inputGroup}>
+                  <label htmlFor={`${name}_${index}`}>{label}</label>
+                  <input
+                    id={`${name}_${index}`}
+                    name={name}
+                    placeholder={placeholder}
+                    type={type}
+                    value={person[name]}
+                    onChange={(e) => handleChange(index, e)}
+                    required={name === 'full_name' || name === 'passport_number'}
+                  />
+                </div>
+              ))}
+
               <div className={styles.inputGroup}>
                 <label htmlFor={`date_of_birth_${index}`}>Date of Birth</label>
                 <input
@@ -178,6 +180,7 @@ const PassportForm = () => {
                   className={styles.datePickerInput}
                 />
               </div>
+
               <div className={styles.inputGroup}>
                 <label htmlFor={`expiry_date_${index}`}>Passport Expiry Date</label>
                 <input
@@ -190,37 +193,7 @@ const PassportForm = () => {
                   className={styles.datePickerInput}
                 />
               </div>
-              <div className={styles.inputGroup}>
-                <label htmlFor={`email_${index}`}>Email (optional)</label>
-                <input
-                  id={`email_${index}`}
-                  name="email"
-                  type="email"
-                  placeholder="Enter email"
-                  value={person.email}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
-              <div className={styles.inputGroup}>
-                <label htmlFor={`address_${index}`}>Address (optional)</label>
-                <input
-                  id={`address_${index}`}
-                  name="address"
-                  placeholder="Enter address"
-                  value={person.address}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
-              <div className={styles.inputGroup}>
-                <label htmlFor={`phone_number_${index}`}>Phone Number (optional)</label>
-                <input
-                  id={`phone_number_${index}`}
-                  name="phone_number"
-                  placeholder="Enter phone number"
-                  value={person.phone_number}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
+
               <div className={styles.inputGroup}>
                 <label htmlFor={`file_${index}`}>Passport Photo</label>
                 <input
@@ -248,6 +221,19 @@ const PassportForm = () => {
 
         <p className={styles.status}>{status}</p>
       </div>
+
+      {/* ✅ Overlay */}
+      {showSuccess && (
+        <div className={styles.overlay}>
+          <div className={styles.overlayBox}>
+            <h2>✅ Thank you!</h2>
+            <p>Your submission was successful.<br />You can now close this tab.</p>
+            <button onClick={() => setShowSuccess(false)} className={styles.closeBtn}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 };
