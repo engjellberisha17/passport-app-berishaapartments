@@ -167,7 +167,7 @@ const PassportForm = () => {
                 />
               </div>
               <div className={styles.inputGroup}>
-                <label htmlFor={`date_of_birth_${index}`}>Date of irth</label>
+                <label htmlFor={`date_of_birth_${index}`}>Date of Birth</label>
                 <input
                   id={`date_of_birth_${index}`}
                   type="date"

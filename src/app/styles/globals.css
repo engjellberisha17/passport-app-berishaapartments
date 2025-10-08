@@ -1,0 +1,61 @@
+/* Global body and element styles */
+body {
+  background: white;
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #2e3d4a;
+  line-height: 1.6;
+}
+
+input,
+input[type="file"] {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  margin: 0;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  background: #ffffff;
+  color: #1f2937;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+.datePickerInput:focus {
+  outline: none;
+  border-color: #6b7280;
+  box-shadow: 0 0 0 4px rgba(107, 114, 128, 0.2);
+}
+
+input::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+button {
+  cursor: pointer;
+  background: #6b7280;
+  color: #ffffff;
+  border: none;
+  padding: 0.85rem 1.75rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: #4b5563;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(75, 85, 99, 0.3);
+}
+
+h1 {
+  text-align: center;
+  color: #1f3b51;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  letter-spacing: -0.025em;
+}
