@@ -1,13 +1,21 @@
-// src/app/api/send-email/route.js
 import { Resend } from 'resend'
 import { NextResponse } from 'next/server'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(req) {
+  // Lazy-init Resend client inside the handler
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: 'RESEND_API_KEY environment variable is not set.' },
+      { status: 500 }
+    )
+  }
+
+  const resend = new Resend(apiKey)
+
   const { persons } = await req.json()
 
-  // Create HTML email content with improved styling
+  // Build HTML content
   let htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
