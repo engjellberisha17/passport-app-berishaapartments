@@ -55,6 +55,7 @@ export async function POST(req) {
           <p><strong>Email:</strong> ${p.email || 'N/A'}</p>
           <p><strong>Address:</strong> ${p.address || 'N/A'}</p>
           <p><strong>Phone Number:</strong> ${p.phone_number || 'N/A'}</p>
+          <p>Passport Image:</p>
           <img src="${p.photo_url}" alt="Passport Photo" />
         </div>
     `
