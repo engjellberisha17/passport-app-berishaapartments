@@ -195,9 +195,9 @@ const PassportForm = () => {
               {[
                 { label: 'Full Name', name: 'full_name', placeholder: 'Enter full name' },
                 { label: 'Passport Number / ID Number', name: 'passport_number', placeholder: 'Enter passport or ID number' },
-                { label: 'Email (optional)', name: 'email', placeholder: 'Enter email', type: 'email' },
-                { label: 'Address (optional)', name: 'address', placeholder: 'Enter address' },
-                { label: 'Phone Number (optional)', name: 'phone_number', placeholder: 'Enter phone number' }
+                { label: 'Email', name: 'email', placeholder: 'Enter email', type: 'email' },
+                { label: 'Address', name: 'address', placeholder: 'Enter address' },
+                { label: 'Phone Number', name: 'phone_number', placeholder: 'Enter phone number' }
               ].map(({ label, name, placeholder, type = 'text' }) => (
                 <div key={name} className={styles.inputGroup}>
                   <label htmlFor={`${name}_${index}`}>{label}</label>
