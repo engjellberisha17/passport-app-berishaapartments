@@ -70,7 +70,7 @@ export async function POST(req) {
 
   await resend.emails.send({
     from: 'noreply@resend.dev',
-    to: ['egiberisha9@gmail.com'], // change as needed
+    to: ['berishaaparts@gmail.com'],
     subject: 'New Passport Submission',
     html: htmlContent,
   });
