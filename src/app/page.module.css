@@ -22,7 +22,6 @@
   font-size: 2.5rem;
   font-weight: 700;
   letter-spacing: -0.025em;
-  margin-bottom: 60px;
   margin-top: 10px;
 }
 
@@ -53,10 +52,11 @@
 }
 
 .personCard h3 {
-  margin: 0 0 1.25rem;
   color: #374151;
   font-size: 1.375rem;
   font-weight: 600;
+  margin-bottom: 0;
+  margin-top: 0;
 }
 
 /* Input group for labels */
@@ -105,6 +105,48 @@
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+
+.selectWrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Select input */
+.selectInput {
+  width: 100%;
+  padding: 14px;
+  padding-left: 15px;
+  padding-right: 20px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 16px;
+  color: black;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fff;
+  background-image: none;
+  position: relative;
+  z-index: 1; /* Keep the select above background */
+}
+
+/* Add Font Awesome arrow */
+.selectWrapper::after {
+  content: '\f078'; /* Font Awesome 'chevron-down' */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #333;
+  pointer-events: none;
+  z-index: 2;
+    padding-right: 7.6px;
+
+}
+
 
 /* Button row */
 .buttonRow {

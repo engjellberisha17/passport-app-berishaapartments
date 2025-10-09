@@ -51,6 +51,7 @@ export async function POST(req) {
           <p><strong>Passport Number / ID Number:</strong> ${p.passport_number}</p>
           <p><strong>Date of Birth:</strong> ${p.date_of_birth}</p>
           <p><strong>Passport Expiry Date:</strong> ${p.expiry_date}</p>
+          <p><strong>Country:</strong> ${p.country}</p>
           <p><strong>Email:</strong> ${p.email || 'N/A'}</p>
           <p><strong>Address:</strong> ${p.address || 'N/A'}</p>
           <p><strong>Phone Number:</strong> ${p.phone_number || 'N/A'}</p>
