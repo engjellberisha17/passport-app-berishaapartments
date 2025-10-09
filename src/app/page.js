@@ -66,7 +66,7 @@ const PassportForm = () => {
     const file = e.target.files[0];
     if (file && file.size > MAX_FILE_SIZE) {
       alert(`File size exceeds 5 MB: ${file.name}`);
-      e.target.value = ''; // Reset input
+      e.target.value = '';
       return;
     }
     setPersons(prev => prev.map((p, i) => i === index ? { ...p, file } : p));
@@ -104,7 +104,14 @@ const PassportForm = () => {
         if (!person.file) throw new Error('All persons must have a passport photo');
 
         const fileExt = person.file.name.split('.').pop();
-        const fileName = `${Date.now()}_${person.full_name.replace(/\s+/g, '_')}.${fileExt}`;
+
+        // Sanitize full_name for file
+        const safeName = person.full_name
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-zA-Z0-9_-]/g, '_');
+
+        const fileName = `${Date.now()}_${safeName}.${fileExt}`;
 
         // Upload file
         const { error: uploadError } = await supabase.storage
@@ -190,12 +197,11 @@ const PassportForm = () => {
                 )}
               </div>
 
-              {[
-                { label: 'Full Name', name: 'full_name', placeholder: 'Enter full name' },
+              {[{ label: 'Full Name', name: 'full_name', placeholder: 'Enter full name' },
                 { label: 'Passport Number / ID Number', name: 'passport_number', placeholder: 'Enter passport or ID number' },
                 { label: 'Email (optional)', name: 'email', placeholder: 'Enter email', type: 'email' },
                 { label: 'Address (optional)', name: 'address', placeholder: 'Enter address' },
-                { label: 'Phone Number (optional)', name: 'phone_number', placeholder: 'Enter phone number' },
+                { label: 'Phone Number (optional)', name: 'phone_number', placeholder: 'Enter phone number' }
               ].map(({ label, name, placeholder, type = 'text' }) => (
                 <div key={name} className={styles.inputGroup}>
                   <label htmlFor={`${name}_${index}`}>{label}</label>
