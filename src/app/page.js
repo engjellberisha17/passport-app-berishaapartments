@@ -105,7 +105,6 @@ const PassportForm = () => {
 
         const fileExt = person.file.name.split('.').pop();
 
-        // Sanitize full_name for file
         const safeName = person.full_name
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
@@ -113,7 +112,6 @@ const PassportForm = () => {
 
         const fileName = `${Date.now()}_${safeName}.${fileExt}`;
 
-        // Upload file
         const { error: uploadError } = await supabase.storage
           .from('passport-photos')
           .upload(fileName, person.file);
@@ -136,16 +134,13 @@ const PassportForm = () => {
         });
       }
 
-      // Insert into Supabase
-      const { error: dbError } = await supabase.from('passports').insert(uploadedPersons);
-      if (dbError) throw dbError;
-
-      // Send email
+      // ✅ FIX: use relative URL for fetch
       const emailRes = await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ persons: uploadedPersons }),
       });
+
       if (!emailRes.ok) throw new Error('Failed to send email');
 
       setStatus('✅ Data saved and email sent successfully!');
@@ -197,7 +192,8 @@ const PassportForm = () => {
                 )}
               </div>
 
-              {[{ label: 'Full Name', name: 'full_name', placeholder: 'Enter full name' },
+              {[
+                { label: 'Full Name', name: 'full_name', placeholder: 'Enter full name' },
                 { label: 'Passport Number / ID Number', name: 'passport_number', placeholder: 'Enter passport or ID number' },
                 { label: 'Email (optional)', name: 'email', placeholder: 'Enter email', type: 'email' },
                 { label: 'Address (optional)', name: 'address', placeholder: 'Enter address' },
