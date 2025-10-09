@@ -15,47 +15,45 @@ const countries = [
   "Congo (Congo-Brazzaville)", "Costa Rica", "Croatia", "Cuba", "Cyprus",
   "Czech Republic (Czechia)", "Democratic Republic of the Congo", "Denmark",
   "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador",
-  "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini (fmr. " +
-  "Swaziland)", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia",
-  "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau",
-  "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran",
-  "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan",
-  "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho",
-  "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar",
-  "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands",
-  "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco",
-  "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar (Burma)", "Namibia",
-  "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria",
-  "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau",
-  "Palestine State", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines",
-  "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda",
-  "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
-  "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal",
-  "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia",
-  "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain",
-  "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan",
-  "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga",
-  "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda",
-  "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay",
-  "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen",
-  "Zambia", "Zimbabwe"
+  "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini (fmr. Swaziland)", "Ethiopia",
+  "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana",
+  "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti",
+  "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland",
+  "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati",
+  "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia",
+  "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia",
+  "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico",
+  "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique",
+  "Myanmar (Burma)", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand",
+  "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman",
+  "Pakistan", "Palau", "Palestine State", "Panama", "Papua New Guinea", "Paraguay",
+  "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda",
+  "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa",
+  "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles",
+  "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia",
+  "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname",
+  "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand",
+  "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey",
+  "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom",
+  "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela",
+  "Vietnam", "Yemen", "Zambia", "Zimbabwe"
 ];
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
 
 const PassportForm = () => {
-  const [persons, setPersons] = useState([
-    {
-      full_name: '',
-      passport_number: '',
-      date_of_birth: '',
-      expiry_date: '',
-      email: '',
-      address: '',
-      phone_number: '',
-      country: '',
-      file: null,
-    },
-  ]);
+  const [persons, setPersons] = useState([{
+    full_name: '',
+    passport_number: '',
+    date_of_birth: '',
+    expiry_date: '',
+    email: '',
+    address: '',
+    phone_number: '',
+    country: '',
+    file: null,
+  }]);
+
   const [status, setStatus] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -66,25 +64,27 @@ const PassportForm = () => {
 
   const handleFileChange = (index, e) => {
     const file = e.target.files[0];
+    if (file && file.size > MAX_FILE_SIZE) {
+      alert(`File size exceeds 5 MB: ${file.name}`);
+      e.target.value = ''; // Reset input
+      return;
+    }
     setPersons(prev => prev.map((p, i) => i === index ? { ...p, file } : p));
   };
 
   const addPerson = () => {
     if (persons.length < 5) {
-      setPersons(prev => [
-        ...prev,
-        {
-          full_name: '',
-          passport_number: '',
-          date_of_birth: '',
-          expiry_date: '',
-          email: '',
-          address: '',
-          phone_number: '',
-          country: '',
-          file: null,
-        },
-      ]);
+      setPersons(prev => [...prev, {
+        full_name: '',
+        passport_number: '',
+        date_of_birth: '',
+        expiry_date: '',
+        email: '',
+        address: '',
+        phone_number: '',
+        country: '',
+        file: null,
+      }]);
     }
   };
 
@@ -143,19 +143,17 @@ const PassportForm = () => {
 
       setStatus('✅ Data saved and email sent successfully!');
       setShowSuccess(true);
-      setPersons([
-        {
-          full_name: '',
-          passport_number: '',
-          date_of_birth: '',
-          expiry_date: '',
-          email: '',
-          address: '',
-          phone_number: '',
-          country: '',
-          file: null,
-        },
-      ]);
+      setPersons([{
+        full_name: '',
+        passport_number: '',
+        date_of_birth: '',
+        expiry_date: '',
+        email: '',
+        address: '',
+        phone_number: '',
+        country: '',
+        file: null,
+      }]);
     } catch (err) {
       console.error('Submission error:', err);
       const message = err?.message || err?.error_description || JSON.stringify(err) || 'Unknown error';
@@ -166,9 +164,9 @@ const PassportForm = () => {
   return (
     <main className={styles.main}>
       <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-/>
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      />
 
       <header className={styles.header}>
         <img src="./logo.png" alt="Logo" className={styles.logo} />
@@ -192,7 +190,6 @@ const PassportForm = () => {
                 )}
               </div>
 
-              {/* Existing fields */}
               {[
                 { label: 'Full Name', name: 'full_name', placeholder: 'Enter full name' },
                 { label: 'Passport Number / ID Number', name: 'passport_number', placeholder: 'Enter passport or ID number' },
@@ -214,7 +211,6 @@ const PassportForm = () => {
                 </div>
               ))}
 
-             {/* Country Select */}
               <div className={styles.inputGroup}>
                 <label htmlFor={`country_${index}`}>Country</label>
                 <div className={styles.selectWrapper}>
@@ -233,7 +229,6 @@ const PassportForm = () => {
                   </select>
                 </div>
               </div>
-
 
               <div className={styles.inputGroup}>
                 <label htmlFor={`date_of_birth_${index}`}>Date of Birth</label>
@@ -270,6 +265,7 @@ const PassportForm = () => {
                   onChange={(e) => handleFileChange(index, e)}
                   required
                 />
+                <small>Max file size: 5 MB</small>
               </div>
             </div>
           ))}
@@ -289,7 +285,6 @@ const PassportForm = () => {
         <p className={styles.status}>{status}</p>
       </div>
 
-      {/* Success Overlay */}
       {showSuccess && (
         <div className={styles.overlay}>
           <div className={styles.overlayBox}>
