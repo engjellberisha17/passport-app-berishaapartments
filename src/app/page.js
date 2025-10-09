@@ -288,16 +288,23 @@ const PassportForm = () => {
       </div>
 
       {showSuccess && (
-        <div className={styles.overlay}>
-          <div className={styles.overlayBox}>
-            <h2>✅ Thank you!</h2>
-            <p>Your submission was successful.<br />You can now close this tab.</p>
-            <button onClick={() => setShowSuccess(false)} className={styles.closeBtn}>
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+  <div className={styles.overlay}>
+    <div className={styles.overlayBox}>
+      <h2>✅ Thank you!</h2>
+      <p>Your submission was successful.<br />The tab will close when you click below.</p>
+      <button
+        onClick={() => {
+          setShowSuccess(false);
+          window.close(); // closes the tab
+        }}
+        className={styles.closeBtn}
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
     </main>
   );
 };
