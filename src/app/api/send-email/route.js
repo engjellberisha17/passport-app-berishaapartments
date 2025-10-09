@@ -1,18 +1,17 @@
-import { Resend } from 'resend'
-import { NextResponse } from 'next/server'
+import { Resend } from 'resend';
+import { NextResponse } from 'next/server';
 
 export async function POST(req) {
-  const apiKey = process.env.RESEND_API_KEY
+  const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
       { error: 'RESEND_API_KEY environment variable is not set.' },
       { status: 500 }
-    )
+    );
   }
 
-  const resend = new Resend(apiKey)
-
-  const { persons } = await req.json()
+  const resend = new Resend(apiKey);
+  const { persons } = await req.json();
 
   let htmlContent = `
     <!DOCTYPE html>
@@ -39,41 +38,42 @@ export async function POST(req) {
         <div class="header">
           <h1>New Passport Submission</h1>
         </div>
-  `
+  `;
 
   persons.forEach((p, index) => {
     htmlContent += `
         <div class="person">
           <h2>${p.full_name} (${index + 1})</h2>
           <p><strong>Full Name:</strong> ${p.full_name}</p>
-          <p><strong>Email:</strong> ${p.email || 'N/A'}</p>
-          <p><strong>Address:</strong> ${p.address || 'N/A'}</p>          
-          <p><strong>Country:</strong> ${p.country}</p>
-          <p><strong>Phone Number:</strong> ${p.phone_number || 'N/A'}</p>
           <p><strong>Date of Birth:</strong> ${p.date_of_birth}</p>
-          <p><strong>Passport Expiry Date:</strong> ${p.expiry_date}</p>
-          <p><strong>Passport Number / ID Number:</strong> ${p.passport_number}</p>
+          <p><strong>Country:</strong> ${p.country}</p>
+          <p><strong>Address:</strong> ${p.address || 'N/A'}</p>
+          <p><strong>Passport / ID Number:</strong> ${p.passport_number}</p>
+          <p><strong>Expiry Date:</strong> ${p.expiry_date}</p>
+          <p><strong>Email:</strong> ${p.email || 'N/A'}</p>
+          <p><strong>Phone Number:</strong> ${p.phone_number || 'N/A'}</p>
+          <p>Passport Image:</p>
           <img src="${p.photo_url}" alt="Passport Photo" />
         </div>
-    `
-  })
+    `;
+  });
 
   htmlContent += `
         <div class="footer">
-          This email was generated automatically. Please do not reply.
-          berishaapartments 2025 
+          This email was generated automatically. Please do not reply.<br/>
+          © Berisha Apartments 2025
         </div>
       </div>
     </body>
     </html>
-  `
+  `;
 
   await resend.emails.send({
     from: 'noreply@resend.dev',
-    to: ['egiberisha9@gmail.com'], 
+    to: ['egiberisha9@gmail.com'], // change as needed
     subject: 'New Passport Submission',
     html: htmlContent,
-  })
+  });
 
-  return NextResponse.json({ ok: true })
+  return NextResponse.json({ ok: true });
 }

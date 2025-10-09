@@ -38,18 +38,18 @@ const countries = [
   "Vietnam", "Yemen", "Zambia", "Zimbabwe"
 ];
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; 
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 const PassportForm = () => {
   const [persons, setPersons] = useState([{
     full_name: '',
-    passport_number: '',
     date_of_birth: '',
+    country: '',
+    address: '',
+    passport_number: '',
     expiry_date: '',
     email: '',
-    address: '',
     phone_number: '',
-    country: '',
     file: null,
   }]);
 
@@ -75,13 +75,13 @@ const PassportForm = () => {
     if (persons.length < 5) {
       setPersons(prev => [...prev, {
         full_name: '',
-        passport_number: '',
         date_of_birth: '',
+        country: '',
+        address: '',
+        passport_number: '',
         expiry_date: '',
         email: '',
-        address: '',
         phone_number: '',
-        country: '',
         file: null,
       }]);
     }
@@ -103,12 +103,10 @@ const PassportForm = () => {
         if (!person.file) throw new Error('All persons must have a passport photo');
 
         const fileExt = person.file.name.split('.').pop();
-
         const safeName = person.full_name
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
           .replace(/[^a-zA-Z0-9_-]/g, '_');
-
         const fileName = `${Date.now()}_${safeName}.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage
@@ -122,13 +120,13 @@ const PassportForm = () => {
 
         uploadedPersons.push({
           full_name: person.full_name,
-          passport_number: person.passport_number,
           date_of_birth: person.date_of_birth,
+          country: person.country,
+          address: person.address,
+          passport_number: person.passport_number,
           expiry_date: person.expiry_date,
           email: person.email,
-          address: person.address,
           phone_number: person.phone_number,
-          country: person.country,
           photo_url: publicUrlData.publicUrl,
         });
       }
@@ -145,13 +143,13 @@ const PassportForm = () => {
       setShowSuccess(true);
       setPersons([{
         full_name: '',
-        passport_number: '',
         date_of_birth: '',
+        country: '',
+        address: '',
+        passport_number: '',
         expiry_date: '',
         email: '',
-        address: '',
         phone_number: '',
-        country: '',
         file: null,
       }]);
     } catch (err) {
@@ -163,11 +161,6 @@ const PassportForm = () => {
 
   return (
     <main className={styles.main}>
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-      />
-
       <header className={styles.header}>
         <img src="./logo.png" alt="Logo" className={styles.logo} />
       </header>
@@ -190,27 +183,35 @@ const PassportForm = () => {
                 )}
               </div>
 
-              {[
-                { label: 'Full Name', name: 'full_name', placeholder: 'Enter full name' },
-                { label: 'Passport Number / ID Number', name: 'passport_number', placeholder: 'Enter passport or ID number' },
-                { label: 'Email', name: 'email', placeholder: 'Enter email', type: 'email' },
-                { label: 'Address', name: 'address', placeholder: 'Enter address' },
-                { label: 'Phone Number', name: 'phone_number', placeholder: 'Enter phone number' }
-              ].map(({ label, name, placeholder, type = 'text' }) => (
-                <div key={name} className={styles.inputGroup}>
-                  <label htmlFor={`${name}_${index}`}>{label}</label>
-                  <input
-                    id={`${name}_${index}`}
-                    name={name}
-                    placeholder={placeholder}
-                    type={type}
-                    value={person[name]}
-                    onChange={(e) => handleChange(index, e)}
-                    required={name === 'full_name' || name === 'passport_number'}
-                  />
-                </div>
-              ))}
+              {/* Name */}
+              <div className={styles.inputGroup}>
+                <label htmlFor={`full_name_${index}`}>Full Name</label>
+                <input
+                  id={`full_name_${index}`}
+                  name="full_name"
+                  placeholder="Enter full name"
+                  type="text"
+                  value={person.full_name}
+                  onChange={(e) => handleChange(index, e)}
+                  required
+                />
+              </div>
 
+              {/* Birthdate */}
+              <div className={styles.inputGroup}>
+                <label htmlFor={`date_of_birth_${index}`}>Date of Birth</label>
+                <input
+                  id={`date_of_birth_${index}`}
+                  type="date"
+                  name="date_of_birth"
+                  value={person.date_of_birth}
+                  onChange={(e) => handleChange(index, e)}
+                  required
+                  className={styles.datePickerInput}
+                />
+              </div>
+
+              {/* Country */}
               <div className={styles.inputGroup}>
                 <label htmlFor={`country_${index}`}>Country</label>
                 <div className={styles.selectWrapper}>
@@ -230,21 +231,36 @@ const PassportForm = () => {
                 </div>
               </div>
 
+              {/* Address */}
               <div className={styles.inputGroup}>
-                <label htmlFor={`date_of_birth_${index}`}>Date of Birth</label>
+                <label htmlFor={`address_${index}`}>Address</label>
                 <input
-                  id={`date_of_birth_${index}`}
-                  type="date"
-                  name="date_of_birth"
-                  value={person.date_of_birth}
+                  id={`address_${index}`}
+                  name="address"
+                  placeholder="Enter address"
+                  type="text"
+                  value={person.address}
                   onChange={(e) => handleChange(index, e)}
-                  required
-                  className={styles.datePickerInput}
                 />
               </div>
 
+              {/* Passport or ID Number */}
               <div className={styles.inputGroup}>
-                <label htmlFor={`expiry_date_${index}`}>Passport Expiry Date</label>
+                <label htmlFor={`passport_number_${index}`}>Passport / ID Number</label>
+                <input
+                  id={`passport_number_${index}`}
+                  name="passport_number"
+                  placeholder="Enter passport or ID number"
+                  type="text"
+                  value={person.passport_number}
+                  onChange={(e) => handleChange(index, e)}
+                  required
+                />
+              </div>
+
+              {/* Expiry Date */}
+              <div className={styles.inputGroup}>
+                <label htmlFor={`expiry_date_${index}`}>Expiry Date</label>
                 <input
                   id={`expiry_date_${index}`}
                   type="date"
@@ -256,6 +272,33 @@ const PassportForm = () => {
                 />
               </div>
 
+              {/* Email */}
+              <div className={styles.inputGroup}>
+                <label htmlFor={`email_${index}`}>Email</label>
+                <input
+                  id={`email_${index}`}
+                  name="email"
+                  placeholder="Enter email"
+                  type="email"
+                  value={person.email}
+                  onChange={(e) => handleChange(index, e)}
+                />
+              </div>
+
+              {/* Phone */}
+              <div className={styles.inputGroup}>
+                <label htmlFor={`phone_number_${index}`}>Phone Number</label>
+                <input
+                  id={`phone_number_${index}`}
+                  name="phone_number"
+                  placeholder="Enter phone number"
+                  type="text"
+                  value={person.phone_number}
+                  onChange={(e) => handleChange(index, e)}
+                />
+              </div>
+
+              {/* Passport Photo */}
               <div className={styles.inputGroup}>
                 <label htmlFor={`file_${index}`}>Passport Photo</label>
                 <input
@@ -286,23 +329,22 @@ const PassportForm = () => {
       </div>
 
       {showSuccess && (
-  <div className={styles.overlay}>
-    <div className={styles.overlayBox}>
-      <h2>✅ Thank you!</h2>
-      <p>Your submission was successful.<br />The tab will close when you click below.</p>
-      <button
-        onClick={() => {
-          setShowSuccess(false);
-          window.close(); 
-        }}
-        className={styles.closeBtn}
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
-
+        <div className={styles.overlay}>
+          <div className={styles.overlayBox}>
+            <h2>✅ Thank you!</h2>
+            <p>Your submission was successful.<br />The tab will close when you click below.</p>
+            <button
+              onClick={() => {
+                setShowSuccess(false);
+                window.close();
+              }}
+              className={styles.closeBtn}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 };
