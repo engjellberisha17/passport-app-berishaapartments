@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import styles from './page.module.css';
 
-// Full list of countries
 const countries = [
   "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
   "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain",
@@ -39,7 +38,7 @@ const countries = [
   "Vietnam", "Yemen", "Zambia", "Zimbabwe"
 ];
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
+const MAX_FILE_SIZE = 5 * 1024 * 1024; 
 
 const PassportForm = () => {
   const [persons, setPersons] = useState([{
@@ -134,7 +133,6 @@ const PassportForm = () => {
         });
       }
 
-      // ✅ FIX: use relative URL for fetch
       const emailRes = await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -295,7 +293,7 @@ const PassportForm = () => {
       <button
         onClick={() => {
           setShowSuccess(false);
-          window.close(); // closes the tab
+          window.close(); 
         }}
         className={styles.closeBtn}
       >

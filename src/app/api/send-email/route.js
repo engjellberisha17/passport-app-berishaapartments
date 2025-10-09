@@ -2,7 +2,6 @@ import { Resend } from 'resend'
 import { NextResponse } from 'next/server'
 
 export async function POST(req) {
-  // Lazy-init Resend client inside the handler
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
     return NextResponse.json(
@@ -15,7 +14,6 @@ export async function POST(req) {
 
   const { persons } = await req.json()
 
-  // Build HTML content
   let htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -72,7 +70,7 @@ export async function POST(req) {
 
   await resend.emails.send({
     from: 'noreply@resend.dev',
-    to: ['egiberisha9@gmail.com'], // testing email
+    to: ['egiberisha9@gmail.com'], 
     subject: 'New Passport Submission',
     html: htmlContent,
   })
