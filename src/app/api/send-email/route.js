@@ -13,6 +13,8 @@ export async function POST(req) {
   const resend = new Resend(apiKey);
   const { persons } = await req.json();
 
+  const totalCount = persons.length;
+
   let htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -24,6 +26,7 @@ export async function POST(req) {
         .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow: hidden; }
         .header { background-color: #007bff; color: #ffffff; padding: 20px; text-align: center; }
         .header h1 { font-size: 28px; margin: 0; }
+        .summary { text-align: center; padding: 15px; font-size: 18px; font-weight: 500; background-color: #f0f4ff; color: #004aad; border-bottom: 1px solid #e0e0e0; }
         .person { padding: 20px; border-bottom: 1px solid #e0e0e0; }
         .person:last-child { border-bottom: none; }
         .person h2 { font-size: 22px; color: #007bff; margin-bottom: 15px; }
@@ -38,23 +41,36 @@ export async function POST(req) {
         <div class="header">
           <h1>New Passport Submission</h1>
         </div>
+
+        <div class="summary">
+          This email contains <strong>${totalCount}</strong> passport${totalCount > 1 ? 's' : ''}.
+        </div>
   `;
 
   persons.forEach((p, index) => {
     htmlContent += `
-        <div class="person">
-          <h2>${p.full_name} (${index + 1})</h2>
-          <p><strong>Full Name:</strong> ${p.full_name}</p>
-          <p><strong>Date of Birth:</strong> ${p.date_of_birth}</p>
-          <p><strong>Country:</strong> ${p.country}</p>
-          <p><strong>Address:</strong> ${p.address || 'N/A'}</p>
-          <p><strong>Passport / ID Number:</strong> ${p.passport_number}</p>
-          <p><strong>Expiry Date:</strong> ${p.expiry_date}</p>
-          <p><strong>Email:</strong> ${p.email || 'N/A'}</p>
-          <p><strong>Phone Number:</strong> ${p.phone_number || 'N/A'}</p>
-          <p>Passport Image:</p>
-          <img src="${p.photo_url}" alt="Passport Photo" />
-        </div>
+      <div class="person">
+        <h2>${p.full_name} (${index + 1})</h2>
+        <p><strong>Full Name:</strong> ${p.full_name}</p>
+        <p><strong>Date of Birth:</strong> ${p.date_of_birth}</p>
+        <p><strong>Country:</strong> ${p.country}</p>
+        <p><strong>Address:</strong> ${p.address || ''}</p>
+        <p><strong>Passport / ID Number:</strong> ${p.passport_number}</p>
+        <p><strong>Expiry Date:</strong> ${p.expiry_date}</p>
+    `;
+
+    // Only show Email and Phone Number for the first person
+    if (index === 0) {
+      htmlContent += `
+        <p><strong>Email:</strong> ${p.email || ''}</p>
+        <p><strong>Phone Number:</strong> ${p.phone_number || ''}</p>
+      `;
+    }
+
+    htmlContent += `
+        <p>Passport Image:</p>
+        <img src="${p.photo_url}" alt="Passport Photo" />
+      </div>
     `;
   });
 
