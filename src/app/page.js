@@ -225,7 +225,10 @@ const PassportForm = () => {
         body: JSON.stringify({ persons: uploadedPersons }),
       });
 
-      if (!emailRes.ok) throw new Error('Failed to send email');
+      if (!emailRes.ok) {
+        const errorBody = await emailRes.json().catch(() => null);
+        throw new Error(errorBody?.error || 'Failed to send email');
+      }
 
       setStatus('✅ Data saved and email sent successfully!');
       setShowSuccess(true);
