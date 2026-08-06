@@ -1,5 +1,5 @@
-import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
 
 const countryToIso = {
   "Afghanistan": "af", "Albania": "al", "Algeria": "dz", "Andorra": "ad", "Angola": "ao",
@@ -33,15 +33,24 @@ const getFlagUrl = (country) => {
 };
 
 export async function POST(req) {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_PASS;
+
+  if (!gmailUser || !gmailPass) {
     return NextResponse.json(
-      { error: 'RESEND_API_KEY environment variable is not set.' },
+      { error: 'GMAIL_USER or GMAIL_PASS environment variable is not set.' },
       { status: 500 }
     );
   }
 
-  const resend = new Resend(apiKey);
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: gmailUser,
+      pass: gmailPass,
+    },
+  });
+
   const { persons } = await req.json();
 
   const totalCount = persons.length;
@@ -118,27 +127,18 @@ export async function POST(req) {
   `;
 
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: ['berishaaparts@gmail.com'],
+    const mailOptions = {
+      from: gmailUser,
+      to: 'berishaaparts@gmail.com',
       subject: 'New Passport Submission',
       html: htmlContent,
-    });
+    };
 
-    if (error) {
-      console.error('Resend API error:', error);
-      return NextResponse.json(
-        { error: 'Failed to send email: ' + error.message },
-        { status: 500 }
-      );
-    }
+    const info = await transporter.sendMail(mailOptions);
 
-    return NextResponse.json({ ok: true, data });
-  } catch (err) {
-    console.error('Email sending error:', err);
-    return NextResponse.json(
-      { error: 'Failed to send email: ' + err.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, messageId: info.messageId });
+  } catch (error) {
+    console.error('Email error:', error);
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
